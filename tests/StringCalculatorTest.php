@@ -35,9 +35,9 @@ class StringCalculatorTest extends TestCase
      **/
     public function givenOneNumberReturnsTheNumber()
     {
-        $response = $this->stringCalculator->add("1");
+        $response = $this->stringCalculator->add("144");
 
-        $this->assertEquals($response, "1");
+        $this->assertEquals($response, "144");
     }
 
     /**
@@ -47,8 +47,37 @@ class StringCalculatorTest extends TestCase
     {
         $response = $this->stringCalculator->add("1,2");
 
-        $this->assertEquals($response, "3");
+        $this->assertEquals("3", $response);
     }
 
+    /**
+     * @test
+     **/
+    public function givenManyNumbersReturnsTheResultOfTheAddOperation()
+    {
+        $response = $this->stringCalculator->add("1,2,3,4,5");
+
+        $this->assertEquals("15", $response);
+    }
+
+    /**
+     * @test
+     **/
+    public function givenManyNumbersSeparatedWithBreakLineReturnsTheResultOfTheAddOperation()
+    {
+        $response = $this->stringCalculator->add("1,2\n3\n4,5,5");
+
+        $this->assertEquals("20", $response);
+    }
+
+    /**
+     * @test
+     **/
+    public function givenANewDelimiterReturnTheResultOfTheAddOperation()
+    {
+        $response = $this->stringCalculator->add("//;\n1;2;3");
+
+        $this->assertEquals("6", $response);
+    }
 
 }
