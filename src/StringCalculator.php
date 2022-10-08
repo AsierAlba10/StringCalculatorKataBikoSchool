@@ -13,23 +13,29 @@ class StringCalculator
             $newDelimiter = substr($numbers,2,1);
             $newAddString = substr($numbers, 4);
             $number = preg_split("/[\n,". $newDelimiter ."]+/",$newAddString);
-            $amountOfNumbers = count($number);
-            $addResult = 0;
-            for($iterator = 0 ; $iterator < $amountOfNumbers ; $iterator++){
-                $addResult = $addResult + $number[$iterator];
-            }
-            return $addResult;
+
+            return $this->addOperation($number);
         }
         if(str_contains($numbers, ",")) {
             $number = preg_split("/[\n,]+/",$numbers);
-            $amountOfNumbers = count($number);
-            $addResult = 0;
-            for($iterator = 0 ; $iterator < $amountOfNumbers ; $iterator++){
-                $addResult = $addResult + $number[$iterator];
-            }
-            return $addResult;
+
+            return $this->addOperation($number);
         }
 
         return $numbers;
+    }
+
+    /**
+     * @param array $number
+     * @return string
+     */
+    public function addOperation(array $number): string
+    {
+        $amountOfNumbers = count($number);
+        $addResult = 0;
+        for ($iterator = 0; $iterator < $amountOfNumbers; $iterator++) {
+            $addResult = $addResult + $number[$iterator];
+        }
+        return $addResult;
     }
 }
