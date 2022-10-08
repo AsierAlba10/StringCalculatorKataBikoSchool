@@ -8,13 +8,23 @@ use PHPUnit\Framework\TestCase;
 class StringCalculatorTest extends TestCase
 {
     private StringCalculator $stringCalculator;
+
+    /**
+     * @setUp
+     **/
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->stringCalculator = new StringCalculator();
+    }
+
+
     /**
      * @test
      **/
     public function givenAnEmptyStringReturns()
     {
-        $this->stringCalculator = new StringCalculator();
-
         $response = $this->stringCalculator->add("");
 
         $this->assertEquals($response, "0");
@@ -25,8 +35,6 @@ class StringCalculatorTest extends TestCase
      **/
     public function givenOneNumberReturnsTheNumber()
     {
-        $this->stringCalculator = new StringCalculator();
-
         $response = $this->stringCalculator->add("1");
 
         $this->assertEquals($response, "1");
@@ -37,11 +45,10 @@ class StringCalculatorTest extends TestCase
      **/
     public function givenTwoNumbersReturnsTheResultOfTheAddOperation()
     {
-        $this->stringCalculator = new StringCalculator();
-
         $response = $this->stringCalculator->add("1,2");
 
         $this->assertEquals($response, "3");
     }
+
 
 }
