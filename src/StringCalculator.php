@@ -29,7 +29,7 @@ class StringCalculator
      * @param array $number
      * @return string
      */
-    public function addOperation(array $number): string
+    private function addOperation(array $number): string
     {
         $amountOfNumbers = count($number);
         $addResult = 0;
