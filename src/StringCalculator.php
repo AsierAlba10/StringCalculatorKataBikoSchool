@@ -28,6 +28,23 @@ class StringCalculator
             throw new NegativeNotAllowedException($negativeNumbers);
         }
         if(str_starts_with($numbers, "//")){
+            if(str_contains($numbers, "[")){
+                $firstPosDelimiter = strpos($numbers, "[") + 1;
+                $lastPosDelimiter = strpos($numbers, "]");
+                $breakLinePosition = strpos($numbers, "\n");
+
+                $delimiterLength = ($lastPosDelimiter - $firstPosDelimiter);
+
+                $newDelimiter = substr($numbers,3,$delimiterLength);
+
+                $newAddString = substr($numbers, $breakLinePosition+1);
+                $number = preg_split("/[\n,". $newDelimiter ."]+/",$newAddString);
+
+                echo $newDelimiter . " " . $newAddString;
+
+                return $this->addOperation($number);
+            }
+
             $newDelimiter = substr($numbers,2,1);
             $newAddString = substr($numbers, 4);
             $number = preg_split("/[\n,". $newDelimiter ."]+/",$newAddString);
@@ -56,7 +73,7 @@ class StringCalculator
     private function addOperation(array $number): string
     {
         $amountOfNumbers = count($number);
-        $addResult = 0;
+        $addResult = "0";
         for ($iterator = 0; $iterator < $amountOfNumbers; $iterator++) {
             $addResult = $addResult + $number[$iterator];
         }

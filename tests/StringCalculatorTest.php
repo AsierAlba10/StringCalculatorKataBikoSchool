@@ -23,27 +23,33 @@ class StringCalculatorTest extends TestCase
 
     /**
      * @test
-     **/
+     *
+     * @throws NegativeNotAllowedException
+     */
     public function givenAnEmptyStringReturns()
     {
         $result = $this->stringCalculator->add("");
 
-        $this->assertEquals($result, "0");
+        $this->assertEquals("0", $result);
     }
 
     /**
      * @test
-     **/
+     *
+     * @throws NegativeNotAllowedException
+     */
     public function givenOneNumberReturnsTheNumber()
     {
         $result = $this->stringCalculator->add("144");
 
-        $this->assertEquals($result, "144");
+        $this->assertEquals("144", $result);
     }
 
     /**
      * @test
-     **/
+     *
+     * @throws NegativeNotAllowedException
+     */
     public function givenTwoNumbersReturnsTheResultOfTheAddOperation()
     {
         $result = $this->stringCalculator->add("1,2");
@@ -53,7 +59,9 @@ class StringCalculatorTest extends TestCase
 
     /**
      * @test
-     **/
+     *
+     * @throws NegativeNotAllowedException
+     */
     public function givenManyNumbersReturnsTheResultOfTheAddOperation()
     {
         $result = $this->stringCalculator->add("1,2,3,4,5");
@@ -63,7 +71,9 @@ class StringCalculatorTest extends TestCase
 
     /**
      * @test
-     **/
+     *
+     * @throws NegativeNotAllowedException
+     */
     public function givenManyNumbersSeparatedWithBreakLineReturnsTheResultOfTheAddOperation()
     {
         $result = $this->stringCalculator->add("1,2\n3\n4,5,5");
@@ -73,7 +83,9 @@ class StringCalculatorTest extends TestCase
 
     /**
      * @test
-     **/
+     *
+     * @throws NegativeNotAllowedException
+     */
     public function givenANewDelimiterReturnTheResultOfTheAddOperation()
     {
         $result = $this->stringCalculator->add("//;\n1;2;3");
@@ -105,7 +117,9 @@ class StringCalculatorTest extends TestCase
 
     /**
      * @test
-     **/
+     *
+     * @throws NegativeNotAllowedException
+     */
     public function givenANumberBiggerThanOneThousand()
     {
         $result = $this->stringCalculator->add("2,1001");
@@ -115,12 +129,26 @@ class StringCalculatorTest extends TestCase
 
     /**
      * @test
-     **/
+     *
+     * @throws NegativeNotAllowedException
+     */
     public function givenSomeNumbersBiggerThanTheLimit()
     {
         $result = $this->stringCalculator->add("2090,1001,2");
 
         $this->assertEquals("2", $result);
+    }
+
+    /**
+     * @test
+     *
+     * @throws NegativeNotAllowedException
+     */
+    public function givenADelimiterWithMoreLengthThanOneCharacter()
+    {
+        $result = $this->stringCalculator->add("//[***]\n1***2***3");
+
+        $this->assertEquals("6", $result);
     }
 
 
