@@ -151,5 +151,15 @@ class StringCalculatorTest extends TestCase
         $this->assertEquals("6", $result);
     }
 
+    /**
+     * @test
+     **/
+    public function givenTwoNewDelimitersReturnTheExpectedResultOfTheAddOperation()
+    {
+        $result = $this->stringCalculator->add("//[***][%][asier]\n1***2%3asier1");
+
+        $this->assertEquals("7", $result);
+    }
+
 
 }

@@ -27,8 +27,12 @@ class StringCalculator
             }
             throw new NegativeNotAllowedException($negativeNumbers);
         }
-        if(str_starts_with($numbers, "//")){
+        if(str_starts_with($numbers, "//")){ // //[***][%]\n1***2%3
             if(str_contains($numbers, "[")){
+                $amountOfDelimiters = substr_count($numbers,"[");
+                if($amountOfDelimiters > 1) {
+                    $numbers = str_replace("][",",",$numbers);
+                }
                 $firstPosDelimiterBracket = strpos($numbers, "[") + 1;
                 $lastPosDelimiterBracket = strpos($numbers, "]");
                 $breakLinePosition = strpos($numbers, "\n");
