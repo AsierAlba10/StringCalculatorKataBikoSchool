@@ -29,24 +29,19 @@ class StringCalculator
         }
         if(str_starts_with($numbers, "//")){
             if(str_contains($numbers, "[")){
-                $firstPosDelimiter = strpos($numbers, "[") + 1;
-                $lastPosDelimiter = strpos($numbers, "]");
+                $firstPosDelimiterBracket = strpos($numbers, "[") + 1;
+                $lastPosDelimiterBracket = strpos($numbers, "]");
                 $breakLinePosition = strpos($numbers, "\n");
 
-                $delimiterLength = ($lastPosDelimiter - $firstPosDelimiter);
+                $delimiterLength = ($lastPosDelimiterBracket - $firstPosDelimiterBracket);
 
                 $newDelimiter = substr($numbers,3,$delimiterLength);
 
                 $newAddString = substr($numbers, $breakLinePosition+1);
-                $number = preg_split("/[\n,". $newDelimiter ."]+/",$newAddString);
-
-                echo $newDelimiter . " " . $newAddString;
-
-                return $this->addOperation($number);
+            } else {
+                $newDelimiter = substr($numbers,2,1);
+                $newAddString = substr($numbers, 4);
             }
-
-            $newDelimiter = substr($numbers,2,1);
-            $newAddString = substr($numbers, 4);
             $number = preg_split("/[\n,". $newDelimiter ."]+/",$newAddString);
 
             return $this->addOperation($number);
@@ -61,7 +56,6 @@ class StringCalculator
 
             return $this->addOperation($number);
         }
-
 
         return $numbers;
     }
