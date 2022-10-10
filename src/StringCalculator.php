@@ -9,59 +9,175 @@ class StringCalculator
      */
     public function add(string $numbers): string
     {
-        if(empty($numbers)){
-            return "0";
+        if($this->isEmptyCase($numbers)){
+            return $this->operateWithIsEmptyCase();
         }
-        if(str_contains($numbers, "-")){
-            $number = preg_split("/[\n,]+/",$numbers);
-            $amountOfNumbers = count($number);
-            if($amountOfNumbers == 1){
-                throw new NegativeNotAllowedException($numbers);
-            }
-
-            $negativeNumbers = "";
-            for ($iterator = 0; $iterator < $amountOfNumbers; $iterator++) {
-                if(str_contains($number[$iterator], "-")){
-                    $negativeNumbers = $negativeNumbers . $number[$iterator] . ",";
-                }
-            }
-            throw new NegativeNotAllowedException($negativeNumbers);
+        if($this->isNegativeNumbersCase($numbers)){
+            $this->operateWithNegativeNumbersCase($numbers);
         }
-        if(str_starts_with($numbers, "//")){ // //[***][%]\n1***2%3
-            if(str_contains($numbers, "[")){
-                $amountOfDelimiters = substr_count($numbers,"[");
-                if($amountOfDelimiters > 1) {
-                    $numbers = str_replace("][",",",$numbers);
-                }
-                $firstPosDelimiterBracket = strpos($numbers, "[") + 1;
-                $lastPosDelimiterBracket = strpos($numbers, "]");
-                $breakLinePosition = strpos($numbers, "\n");
-
-                $delimiterLength = ($lastPosDelimiterBracket - $firstPosDelimiterBracket);
-
-                $newDelimiter = substr($numbers,3,$delimiterLength);
-
-                $newAddString = substr($numbers, $breakLinePosition+1);
-            } else {
-                $newDelimiter = substr($numbers,2,1);
-                $newAddString = substr($numbers, 4);
-            }
-            $number = preg_split("/[\n,". $newDelimiter ."]+/",$newAddString);
-
-            return $this->addOperation($number);
-        }
-        if(str_contains($numbers, ",")) {
-            $number = preg_split("/[\n,]+/",$numbers);
-
-            if(!$this->isUnderLimit($number))
+        if($this->isDelimiterExpressionsCase($numbers)){
+            if($this->isOneCharacterNewDelimiterCase($numbers))
             {
-                return  $this->getStringUnderLimit($number);
+                return $this->operateWithIsOneCharacterNewDelimiterCase($numbers);
             }
+            if($this->isNewDelimiterLargerThanOneCharacterCase($numbers))
+            {
+                if($this->isMoreThanOneNewDelimiterCase($numbers))
+                {
+                    return $this->operateWithIsMoreThanOneNewDelimiterCase($numbers);
+                }
 
-            return $this->addOperation($number);
+                return $this->operateWithIsNewDelimiterLargerThanOneCharacterCase($numbers);
+            }
+        }
+        if($this->isNumbersToAddCase($numbers)) {
+            return $this->operateWithNumbersToAddCase($numbers);
         }
 
         return $numbers;
+    }
+
+    /**
+     * @param string $numbers
+     * @return bool
+     */
+    private function isEmptyCase(string $numbers): bool
+    {
+        return empty($numbers);
+    }
+
+    /**
+     * @return string
+     */
+    private function operateWithIsEmptyCase(): string
+    {
+        return "0";
+    }
+
+    /**
+     * @param string $numbers
+     * @return bool
+     */
+    private function isNegativeNumbersCase(string $numbers): bool
+    {
+        return str_contains($numbers, "-");
+    }
+
+    /**
+     * @param string $numbers
+     * @throws NegativeNotAllowedException
+     */
+    private function operateWithNegativeNumbersCase(string $numbers)
+    {
+        $number = preg_split("/[\n,]+/",$numbers);
+        $amountOfNumbers = count($number);
+        if($amountOfNumbers == 1){
+            throw new NegativeNotAllowedException($numbers);
+        }
+
+        $negativeNumbers = "";
+        for ($iterator = 0; $iterator < $amountOfNumbers; $iterator++) {
+            if(str_contains($number[$iterator], "-")){
+                $negativeNumbers = $negativeNumbers . $number[$iterator] . ",";
+            }
+        }
+        throw new NegativeNotAllowedException($negativeNumbers);
+    }
+
+    /**
+     * @param string $numbers
+     * @return bool
+     */
+    private function isDelimiterExpressionsCase(string $numbers): bool
+    {
+        return str_starts_with($numbers, "//");
+    }
+
+    /**
+     * @param string $numbers
+     * @return bool
+     */
+    private function isOneCharacterNewDelimiterCase(string $numbers): bool
+    {
+        return !str_contains($numbers, "[");
+    }
+
+    /**
+     * @param string $numbers
+     * @return string
+     */
+    private function operateWithIsOneCharacterNewDelimiterCase(string $numbers): string
+    {
+        $newDelimiter = substr($numbers,2,1);
+        $newAddString = substr($numbers, 4);
+
+        $number = preg_split("/[\n,". $newDelimiter ."]+/",$newAddString);
+
+        return $this->addOperation($number);
+    }
+
+    /**
+     * @param string $numbers
+     * @return bool
+     */
+    private function isNewDelimiterLargerThanOneCharacterCase(string $numbers): bool
+    {
+        return str_contains($numbers, "[");
+    }
+
+    /**
+     * @param string $numbers
+     * @return string
+     */
+    private function operateWithIsNewDelimiterLargerThanOneCharacterCase(string $numbers): string
+    {
+        return $this->getNewDelimiter($numbers);
+    }
+
+    /**
+     * @param string $numbers
+     * @return bool
+     */
+    private function isMoreThanOneNewDelimiterCase(string $numbers): bool
+    {
+        $amountOfDelimiters = substr_count($numbers,"[");
+        return $amountOfDelimiters > 1;
+    }
+
+    /**
+     * @param string $numbers
+     * @return string
+     */
+    private function operateWithIsMoreThanOneNewDelimiterCase(string $numbers): string
+    {
+        $convertedNumbers = str_replace("][",",",$numbers);
+        return $this->getNewDelimiter($convertedNumbers);
+    }
+
+
+    /**
+     * @param string $numbers
+     * @return bool
+     */
+    private function isNumbersToAddCase(string $numbers): bool
+    {
+        return str_contains($numbers, ",");
+    }
+
+    /**
+     * @param string $numbers
+     * @return string
+     */
+    private function operateWithNumbersToAddCase(string $numbers): string
+    {
+        $number = preg_split("/[\n,]+/",$numbers);
+
+        if(!$this->isUnderLimit($number))
+        {
+            return  $this->getStringUnderLimit($number);
+        }
+
+        return $this->addOperation($number);
     }
 
     /**
@@ -80,6 +196,21 @@ class StringCalculator
 
     /**
      * @param array $number
+     * @return bool
+     */
+    private function isUnderLimit(array $number): bool
+    {
+        $amountOfNumbers = count($number);
+        for ($iterator = 0; $iterator < $amountOfNumbers; $iterator++) {
+            if ($number[$iterator] > 1000) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param array $number
      * @return string
      */
     public function getStringUnderLimit(array $number): string
@@ -94,14 +225,26 @@ class StringCalculator
         return $numberUnderLimit;
     }
 
-    private function isUnderLimit(array $number): bool
+    /**
+     * @param string $convertedNumbers
+     * @return string
+     */
+    private function getNewDelimiter(string $convertedNumbers): string
     {
-        $amountOfNumbers = count($number);
-        for ($iterator = 0; $iterator < $amountOfNumbers; $iterator++) {
-            if ($number[$iterator] > 1000) {
-                return false;
-            }
-        }
-        return true;
+        $firstPosDelimiterBracket = strpos($convertedNumbers, "[") + 1;
+        $lastPosDelimiterBracket = strpos($convertedNumbers, "]");
+        $breakLinePosition = strpos($convertedNumbers, "\n");
+
+        $delimiterLength = ($lastPosDelimiterBracket - $firstPosDelimiterBracket);
+
+        $newDelimiter = substr($convertedNumbers, 3, $delimiterLength);
+
+        $newAddString = substr($convertedNumbers, $breakLinePosition + 1);
+
+        $number = preg_split("/[\n," . $newDelimiter . "]+/", $newAddString);
+
+        return $this->addOperation($number);
     }
+
+
 }
