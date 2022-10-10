@@ -4,6 +4,8 @@ namespace Deg540\PHPTestingBoilerplate;
 
 class StringCalculator
 {
+    const EMPTY_RESULT = "0";
+
     /**
      * @throws NegativeNotAllowedException
      */
@@ -51,7 +53,7 @@ class StringCalculator
      */
     private function operateWithIsEmptyCase(): string
     {
-        return "0";
+        return self::EMPTY_RESULT;
     }
 
     /**
@@ -154,7 +156,6 @@ class StringCalculator
         return $this->getNewDelimiter($convertedNumbers);
     }
 
-
     /**
      * @param string $numbers
      * @return bool
@@ -245,6 +246,4 @@ class StringCalculator
 
         return $this->addOperation($number);
     }
-
-
 }
